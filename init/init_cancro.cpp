@@ -34,11 +34,10 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 #include <android-base/logging.h>
+#include <android-base/properties.h>
 
 #include "vendor_init.h"
 #include "property_service.h"
-
-using android::init::property_set;
 
 #define ISMATCH(a,b)    (!strncmp(a,b,PROP_VALUE_MAX))
 
@@ -69,15 +68,15 @@ static int read_file2(const char *fname, char *data, int max_size)
     return 1;
 }
 
-void property_override(char const prop[], char const value[])
+void property_override(char const prop[], char const value[], bool add = true)
 {
-    prop_info *pi;
+    auto pi = (prop_info *) __system_property_find(prop);
 
-    pi = (prop_info*) __system_property_find(prop);
-    if (pi)
+    if (pi != nullptr) {
         __system_property_update(pi, value, strlen(value));
-    else
+    } else if (add) {
         __system_property_add(prop, strlen(prop), value, strlen(value));
+    }
 }
 
 void property_override_dual(char const system_prop[],
@@ -109,9 +108,9 @@ void init_alarm_boot_properties()
      * 8 -> KPDPWR_N pin toggled (power key pressed)
      */
         if(buf[0] == '3')
-            property_set("ro.alarm_boot", "true");
+            property_override("ro.alarm_boot", "true");
         else
-            property_set("ro.alarm_boot", "false");
+            property_override("ro.alarm_boot", "false");
     }
 }
 
@@ -134,15 +133,15 @@ void vendor_load_properties()
     switch (raw_id) {
         case 1978:
             property_override_dual("ro.product.model", "ro.vendor.product.model", "MI 3W");
-            property_set("ro.nfc.port", "I2C");
+            property_override("ro.nfc.port", "I2C");
             break;
         case 1974:
             property_override_dual("ro.product.model", "ro.vendor.product.model", "MI 4");
             break;
         case 1972:
             property_override_dual("ro.product.model", "ro.vendor.product.model", "MI 4LTE");
-            property_set("ro.telephony.default_network", "8");
-            property_set("telephony.lteOnGSMDevice", "1");
+            property_override("ro.telephony.default_network", "8");
+            property_override("telephony.lteOnGSMDevice", "1");
             break;
         default:
             // Other unsupported variants
@@ -150,6 +149,6 @@ void vendor_load_properties()
             break;
     }
 
-    property_set("rild.libargs", "-d /dev/smd0");
+    property_override("rild.libargs", "-d /dev/smd0");
     init_alarm_boot_properties();
 }
