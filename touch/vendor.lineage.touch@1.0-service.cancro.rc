@@ -12,7 +12,7 @@ on init
     chmod 0664 /proc/touchscreen/stylus
     restorecon /proc/touchscreen/stylus
 
-service vendor.touch-hal-1-0 /vendor/bin/hw/vendor.mokee.touch@1.0-service.cancro
+service vendor.touch-hal-1-0 /vendor/bin/hw/vendor.lineage.touch@1.0-service.cancro
     class hal
     user system
     group system

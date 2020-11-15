@@ -72,7 +72,7 @@ PRODUCT_PACKAGES += \
 
 # Touch
 PRODUCT_PACKAGES += \
-    vendor.mokee.touch@1.0-service.cancro
+    vendor.lineage.touch@1.0-service.cancro
 
 # WiFi
 PRODUCT_COPY_FILES += \

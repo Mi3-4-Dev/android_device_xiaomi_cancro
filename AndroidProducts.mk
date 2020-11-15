@@ -14,4 +14,4 @@
 # limitations under the License.
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/mokee_cancro.mk
+    $(LOCAL_DIR)/lineage_cancro.mk
