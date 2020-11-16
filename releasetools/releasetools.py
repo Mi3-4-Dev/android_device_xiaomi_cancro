@@ -37,9 +37,4 @@ def AddBasebandAssertion(info):
     return
 
 def FullOTA_InstallEnd(info):
-    info.script.Mount("/system");
-    info.script.AppendExtra('if run_program("/tmp/install/bin/device_check.sh") != 0 then');
-    info.script.AppendExtra('ui_print("Warning!");');
-    info.script.AppendExtra('ui_print("You are flashing on an unsupported device.");');
-    info.script.AppendExtra('endif;');
-    info.script.Unmount("/system");
+    info.script.AppendExtra('run_program("/tmp/install/bin/device_check.sh");');
